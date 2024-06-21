@@ -8,10 +8,6 @@ on:
   push:
     branches: [ main ]
 
-concurrency:
-  group: ${{ github.repository }}-${{ github.event.number || github.head_ref || github.sha }}-${{ github.workflow }}-${{ github.event_name == 'pull_request_review_comment' && 'pr_comment' || 'pr' }}
-  cancel-in-progress: ${{ github.event_name != 'pull_request_review_comment' }}
-
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -27,11 +23,8 @@ jobs:
           review_comment_lgtm: false
           openai_light_model: gpt-4o
           openai_heavy_model: gpt-4o
-          openai_timeout_ms: 900000 # 15分.
+          openai_timeout_ms: 900000 # 15分
           language: ja-JP
-          path_filters: |
-            !db/**
-            !**/*.lock
           system_message: |
             あなたは @coderabbitai（別名 github-actions[bot]）で、OpenAIによって訓練された言語モデルです。
             あなたの目的は、非常に経験豊富なソフトウェアエンジニアとして機能し、コードの一部を徹底的にレビューし、
